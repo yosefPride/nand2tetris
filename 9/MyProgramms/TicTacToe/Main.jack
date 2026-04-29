@@ -1,0 +1,27 @@
+/** Main program to test TicTacToe **/
+class Main {
+    function void main() {
+        var TicTacToe game;
+        var int i;
+
+        // Instantiate the TicTacToe game
+        let game = TicTacToe.new();
+
+        // Call the printBoard method to print the board
+        do game.printBoard();
+
+        let i = 0;
+
+        while (i<9){
+            if (game.isWin() = -1){
+                do game.printWinMessage();
+                do Sys.halt();
+            }
+            let i = i + 1;
+            do game.move();
+            do game.printBoard();
+            }
+        do game.dispose();
+    return;
+    }
+}

@@ -1,0 +1,16 @@
+/** give directions **/
+class Main{
+    function void main(){
+    do Output.printString("At the end of this corrider.");
+    do Output.println();
+    do Output.printString("you'll see a browen bookshelf");
+    do Output.println();
+    do Output.printString("take a left over there");
+    do Output.println();
+    do Output.printString("then go up the stairs");
+    do Output.println();
+    do Output.printString("and it should be the first door to your right");
+    return;
+    }
+
+}

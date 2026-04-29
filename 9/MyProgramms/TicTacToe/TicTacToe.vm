@@ -1,0 +1,728 @@
+function TicTacToe.new 0
+push constant 5
+call Memory.alloc 1
+pop pointer 0
+push constant 9
+call Array.new 1
+pop this 0
+push constant 88
+pop this 4
+push constant 0
+push this 0
+add
+push constant 49
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 1
+push this 0
+add
+push constant 50
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 2
+push this 0
+add
+push constant 51
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 3
+push this 0
+add
+push constant 52
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 4
+push this 0
+add
+push constant 53
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 5
+push this 0
+add
+push constant 54
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 6
+push this 0
+add
+push constant 55
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 7
+push this 0
+add
+push constant 56
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 8
+push this 0
+add
+push constant 57
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 9
+call Array.new 1
+pop this 1
+push constant 0
+push this 1
+add
+push constant 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 1
+push this 1
+add
+push constant 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 2
+push this 1
+add
+push constant 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 3
+push this 1
+add
+push constant 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 4
+push this 1
+add
+push constant 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 5
+push this 1
+add
+push constant 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 6
+push this 1
+add
+push constant 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 7
+push this 1
+add
+push constant 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 8
+push this 1
+add
+push constant 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push pointer 0
+return
+function TicTacToe.printBoard 0
+push argument 0
+pop pointer 0
+call Screen.clearScreen 0
+pop temp 0
+push constant 0
+push constant 0
+call Output.moveCursor 2
+pop temp 0
+push constant 0
+push this 0
+add
+pop pointer 1
+push that 0
+call Output.printChar 1
+pop temp 0
+push constant 1
+call String.new 1
+push constant 124
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+push constant 1
+push this 0
+add
+pop pointer 1
+push that 0
+call Output.printChar 1
+pop temp 0
+push constant 1
+call String.new 1
+push constant 124
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+push constant 2
+push this 0
+add
+pop pointer 1
+push that 0
+call Output.printChar 1
+pop temp 0
+call Output.println 0
+pop temp 0
+push constant 5
+call String.new 1
+push constant 45
+call String.appendChar 2
+push constant 45
+call String.appendChar 2
+push constant 45
+call String.appendChar 2
+push constant 45
+call String.appendChar 2
+push constant 45
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+call Output.println 0
+pop temp 0
+push constant 3
+push this 0
+add
+pop pointer 1
+push that 0
+call Output.printChar 1
+pop temp 0
+push constant 1
+call String.new 1
+push constant 124
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+push constant 4
+push this 0
+add
+pop pointer 1
+push that 0
+call Output.printChar 1
+pop temp 0
+push constant 1
+call String.new 1
+push constant 124
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+push constant 5
+push this 0
+add
+pop pointer 1
+push that 0
+call Output.printChar 1
+pop temp 0
+call Output.println 0
+pop temp 0
+push constant 5
+call String.new 1
+push constant 45
+call String.appendChar 2
+push constant 45
+call String.appendChar 2
+push constant 45
+call String.appendChar 2
+push constant 45
+call String.appendChar 2
+push constant 45
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+call Output.println 0
+pop temp 0
+push constant 6
+push this 0
+add
+pop pointer 1
+push that 0
+call Output.printChar 1
+pop temp 0
+push constant 1
+call String.new 1
+push constant 124
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+push constant 7
+push this 0
+add
+pop pointer 1
+push that 0
+call Output.printChar 1
+pop temp 0
+push constant 1
+call String.new 1
+push constant 124
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+push constant 8
+push this 0
+add
+pop pointer 1
+push that 0
+call Output.printChar 1
+pop temp 0
+call Output.println 0
+pop temp 0
+push constant 0
+return
+function TicTacToe.dispose 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function TicTacToe.move 0
+push argument 0
+pop pointer 0
+push constant 46
+call String.new 1
+push constant 101
+call String.appendChar 2
+push constant 110
+call String.appendChar 2
+push constant 116
+call String.appendChar 2
+push constant 101
+call String.appendChar 2
+push constant 114
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 116
+call String.appendChar 2
+push constant 104
+call String.appendChar 2
+push constant 101
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 112
+call String.appendChar 2
+push constant 111
+call String.appendChar 2
+push constant 115
+call String.appendChar 2
+push constant 105
+call String.appendChar 2
+push constant 116
+call String.appendChar 2
+push constant 105
+call String.appendChar 2
+push constant 111
+call String.appendChar 2
+push constant 110
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 111
+call String.appendChar 2
+push constant 110
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 119
+call String.appendChar 2
+push constant 104
+call String.appendChar 2
+push constant 105
+call String.appendChar 2
+push constant 99
+call String.appendChar 2
+push constant 104
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 121
+call String.appendChar 2
+push constant 111
+call String.appendChar 2
+push constant 117
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 119
+call String.appendChar 2
+push constant 97
+call String.appendChar 2
+push constant 110
+call String.appendChar 2
+push constant 116
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 116
+call String.appendChar 2
+push constant 111
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 109
+call String.appendChar 2
+push constant 111
+call String.appendChar 2
+push constant 118
+call String.appendChar 2
+push constant 101
+call String.appendChar 2
+push constant 58
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+call Keyboard.readInt 1
+pop this 2
+push this 2
+push constant 1
+sub
+pop this 3
+push this 3
+push this 0
+add
+push this 4
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push this 3
+push this 1
+add
+push constant 1
+neg
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push this 4
+push constant 88
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 79
+pop this 4
+goto IF_END0
+label IF_FALSE0
+push constant 88
+pop this 4
+label IF_END0
+push constant 0
+return
+function TicTacToe.isWin 0
+push argument 0
+pop pointer 0
+push constant 0
+push this 0
+add
+pop pointer 1
+push that 0
+push constant 1
+push this 0
+add
+pop pointer 1
+push that 0
+eq
+push constant 1
+push this 0
+add
+pop pointer 1
+push that 0
+and
+push constant 2
+push this 0
+add
+pop pointer 1
+push that 0
+eq
+push constant 3
+push this 0
+add
+pop pointer 1
+push that 0
+push constant 4
+push this 0
+add
+pop pointer 1
+push that 0
+eq
+push constant 4
+push this 0
+add
+pop pointer 1
+push that 0
+and
+push constant 5
+push this 0
+add
+pop pointer 1
+push that 0
+eq
+or
+push constant 6
+push this 0
+add
+pop pointer 1
+push that 0
+push constant 7
+push this 0
+add
+pop pointer 1
+push that 0
+eq
+push constant 7
+push this 0
+add
+pop pointer 1
+push that 0
+and
+push constant 8
+push this 0
+add
+pop pointer 1
+push that 0
+eq
+or
+push constant 0
+push this 0
+add
+pop pointer 1
+push that 0
+push constant 3
+push this 0
+add
+pop pointer 1
+push that 0
+eq
+push constant 3
+push this 0
+add
+pop pointer 1
+push that 0
+and
+push constant 6
+push this 0
+add
+pop pointer 1
+push that 0
+eq
+or
+push constant 1
+push this 0
+add
+pop pointer 1
+push that 0
+push constant 4
+push this 0
+add
+pop pointer 1
+push that 0
+eq
+push constant 4
+push this 0
+add
+pop pointer 1
+push that 0
+and
+push constant 7
+push this 0
+add
+pop pointer 1
+push that 0
+eq
+or
+push constant 2
+push this 0
+add
+pop pointer 1
+push that 0
+push constant 5
+push this 0
+add
+pop pointer 1
+push that 0
+eq
+push constant 5
+push this 0
+add
+pop pointer 1
+push that 0
+and
+push constant 8
+push this 0
+add
+pop pointer 1
+push that 0
+eq
+or
+push constant 0
+push this 0
+add
+pop pointer 1
+push that 0
+push constant 4
+push this 0
+add
+pop pointer 1
+push that 0
+eq
+push constant 4
+push this 0
+add
+pop pointer 1
+push that 0
+and
+push constant 8
+push this 0
+add
+pop pointer 1
+push that 0
+eq
+or
+push constant 2
+push this 0
+add
+pop pointer 1
+push that 0
+push constant 4
+push this 0
+add
+pop pointer 1
+push that 0
+eq
+push constant 4
+push this 0
+add
+pop pointer 1
+push that 0
+and
+push constant 6
+push this 0
+add
+pop pointer 1
+push that 0
+eq
+or
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 1
+neg
+return
+goto IF_END0
+label IF_FALSE0
+push constant 0
+return
+label IF_END0
+function TicTacToe.getPlayer 0
+push argument 0
+pop pointer 0
+push this 4
+push constant 88
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 79
+return
+goto IF_END0
+label IF_FALSE0
+push constant 88
+return
+label IF_END0
+function TicTacToe.printWinMessage 0
+push argument 0
+pop pointer 0
+call Screen.clearScreen 0
+pop temp 0
+push constant 10
+push constant 27
+call Output.moveCursor 2
+pop temp 0
+push pointer 0
+call TicTacToe.getPlayer 1
+call Output.printChar 1
+pop temp 0
+push constant 6
+call String.new 1
+push constant 32
+call String.appendChar 2
+push constant 119
+call String.appendChar 2
+push constant 105
+call String.appendChar 2
+push constant 110
+call String.appendChar 2
+push constant 115
+call String.appendChar 2
+push constant 33
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+push constant 0
+return
+function TicTacToe.isOccupied 0
+push argument 0
+pop pointer 0
+push argument 1
+push this 1
+add
+pop pointer 1
+push that 0
+push constant 1
+neg
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+not
+return
+goto IF_END0
+label IF_FALSE0
+push constant 0
+return
+label IF_END0
+function TicTacToe.getIndex 0
+push argument 0
+pop pointer 0
+push this 3
+return

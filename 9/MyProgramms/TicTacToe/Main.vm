@@ -1,0 +1,45 @@
+function Main.main 2
+call TicTacToe.new 0
+pop local 0
+push local 0
+call TicTacToe.printBoard 1
+pop temp 0
+push constant 0
+pop local 1
+label WHILE_EXP0
+push local 1
+push constant 9
+lt
+not
+if-goto WHILE_END0
+push local 0
+call TicTacToe.isWin 1
+push constant 1
+neg
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push local 0
+call TicTacToe.printWinMessage 1
+pop temp 0
+call Sys.halt 0
+pop temp 0
+label IF_FALSE0
+push local 1
+push constant 1
+add
+pop local 1
+push local 0
+call TicTacToe.move 1
+pop temp 0
+push local 0
+call TicTacToe.printBoard 1
+pop temp 0
+goto WHILE_EXP0
+label WHILE_END0
+push local 0
+call TicTacToe.dispose 1
+pop temp 0
+push constant 0
+return

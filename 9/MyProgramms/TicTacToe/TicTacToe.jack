@@ -1,0 +1,136 @@
+/** Represents a tic-tac-toe game **/
+class TicTacToe{
+    field Array board, occupied;
+    field int position, index,  player;
+
+    constructor TicTacToe new(){
+        let board = Array.new(9); //construct Array of length 9 for board
+        let player = 88;
+        let board[0] = 49; //top left
+        let board[1] = 50; //top middle
+        let board[2] = 51; //top right
+        let board[3] = 52; //middle left
+        let board[4] = 53; //middle
+        let board[5] = 54; //middle right
+        let board[6] = 55; //bottom left
+        let board[7] = 56; //bottom middle
+        let board[8] = 57; //bottom right
+
+        let occupied = Array.new(9); //construct Array of length 9 for chcking if a position on the board is occupied
+        let occupied[0] = 0;
+        let occupied[1] = 0;
+        let occupied[2] = 0;
+        let occupied[3] = 0;
+        let occupied[4] = 0;
+        let occupied[5] = 0;
+        let occupied[6] = 0;
+        let occupied[7] = 0;
+        let occupied[8] = 0;
+
+        return this;
+    }
+
+    method void printBoard(){
+        do Screen.clearScreen();
+        do Output.moveCursor(0,0);
+        do Output.printChar(board[0]);
+        do Output.printString("|");
+        do Output.printChar(board[1]);
+        do Output.printString("|");
+        do Output.printChar(board[2]);
+        do Output.println();
+        do Output.printString("-----");
+        do Output.println();
+        do Output.printChar(board[3]);
+        do Output.printString("|");
+        do Output.printChar(board[4]);
+        do Output.printString("|");
+        do Output.printChar(board[5]);
+        do Output.println();
+        do Output.printString("-----");
+        do Output.println();
+        do Output.printChar(board[6]);
+        do Output.printString("|");
+        do Output.printChar(board[7]);
+        do Output.printString("|");
+        do Output.printChar(board[8]);
+        do Output.println();
+        return;
+    }
+
+    method void dispose(){
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void move(){
+        //get user input to manipulate the board
+        let position = Keyboard.readInt("enter the position on which you want to move: ");
+        let index = position - 1;
+        let board[index] = player;
+        let occupied[index] = - 1;
+        if (player = 88){
+            let player = 79;
+        }else{
+            let player = 88;
+        }
+        return;
+    }
+
+      method int isWin(){ //needs fixing
+        if ((board[0] = board[1] & board[1] = board[2]) |
+            (board[3] = board[4] & board[4] = board[5]) |
+            (board[6] = board[7] & board[7] = board[8]) |
+            (board[0] = board[3] & board[3] = board[6]) |
+            (board[1] = board[4] & board[4] = board[7]) |
+            (board[2] = board[5] & board[5] = board[8]) |
+            (board[0] = board[4] & board[4] = board[8]) |
+            (board[2] = board[4] & board[4] = board[6])){
+            return -1;
+        }else{
+            return 0;
+        }
+     }
+
+     method int getPlayer(){
+        if (player = 88){
+            return 79;
+        }else{
+            return 88;
+        }
+    }
+
+    method void printWinMessage(){
+        do Screen.clearScreen();
+        do Output.moveCursor(10,27);
+        do Output.printChar(getPlayer());
+        do Output.printString(" wins!");
+        return;
+    }
+
+    method boolean isOccupied(int index){
+        if (occupied[index] = -1){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    method int getIndex(){
+        return index;
+    }
+
+    // method void printDrawMessage(){
+    //     do Output.moveCursor(10,27);
+    //     do Output.printString("Game over! it's a tie!");
+    //     return;
+    // }
+
+    //  method int positionFree(){
+    //     if (board[getIndex()] < 10){
+    //         return -1;
+    //     }
+    //     return 0;
+    // }
+}
+

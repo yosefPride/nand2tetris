@@ -1,0 +1,17 @@
+class Main {
+    function void main() {
+        do Output.printChar(72); // 'H'
+        do Output.printChar(101); // 'e'
+        do Output.printChar(108); // 'l'
+        do Output.printChar(108); // 'l'
+        do Output.printChar(111); // 'o'
+        do Output.printChar(32); // Space
+        do Output.printChar(87); // 'W'
+        do Output.printChar(111); // 'o'
+        do Output.printChar(114); // 'r'
+        do Output.printChar(108); // 'l'
+        do Output.printChar(100); // 'd'
+        do Output.println(); // Move to a new line
+        return;
+    }
+}

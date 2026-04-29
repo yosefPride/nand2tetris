@@ -1,0 +1,39 @@
+/** carries out the user's operation. **/
+class Main{
+    function void main(){
+    var int result;
+    var String operator;
+    var int operand1;
+    var int operand2;
+
+    let operand1 = Keyboard.readInt("enter an integer: "); // Read user's input
+
+    do Output.printString("enter an operator(+, -, /, *): ");
+    let operator = Keyboard.readChar(); // Read user's input
+    do Output.println();
+
+    let operand2 = Keyboard.readInt("enter an integer: "); // Read user's input
+
+    if (operator = 43){ // ASCII code for "+"
+        let result = operand1 + operand2;
+    }else{
+        if (operator = 45){ // ASCII code for "-"
+            let result = operand1 - operand2;
+        }else{
+            if (operator = 47){ // ASCII code for "/"
+                let result = operand1 / operand2;
+            }else{
+                if (operator = 42){ // ASCII code for "*"
+                    let result = operand1 * operand2;
+                }
+            }
+        }
+    }
+
+    do Output.printString("the result is: ");
+    do Output.printInt(result);
+    do Output.println();
+
+    return;
+    }
+}

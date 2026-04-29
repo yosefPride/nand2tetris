@@ -1,0 +1,11 @@
+/** prints a string **/
+class Main {
+    function void main(){
+    /* prints some text using the standerd library. */
+    do Output.printString("hello, programming!");
+    do Output.println();
+    do Output.printString("here we go!");
+    do Output.println();
+    return;
+    }
+}

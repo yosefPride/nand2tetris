@@ -1,0 +1,101 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/5/CPU.hdl
+/**
+ * The Hack Central Processing unit (CPU).
+ * Parses the binary code in the instruction input and executes it according to the
+ * Hack machine language specification. In the case of a C-instruction, computes the
+ * function specified by the instruction. If the instruction specifies to read a memory
+ * value, the inM input is expected to contain this value. If the instruction specifies
+ * to write a value to the memory, sets the outM output to this value, sets the addressM
+ * output to the target address, and asserts the writeM output (when writeM = 0, any
+ * value may appear in outM).
+ * If the reset input is 0, computes the address of the next instruction and sets the
+ * pc output to that value. If the reset input is 1, sets pc to 0.
+ * Note: The outM and writeM outputs are combinational: they are affected by the
+ * instruction's execution during the current cycle. The addressM and pc outputs are
+ * clocked: although they are affected by the instruction's execution, they commit to
+ * their new values only in the next cycle.
+ */
+        //Instruction[15]; 1 = C_instruction 0 = A_instruction
+
+        //A_instruction = constant value [0..14]
+
+        //C_instruction =
+        //instruction[0..2] = jump bits
+            //instruction[0] = j3
+            //instruction[1] = j2
+            //instruction[2] = j1
+        //instruction[3..5] = destination bits
+            //instruction[3] = writeM
+            //instruction[4] = load DRegister
+            //instruction[5] = load ARegister
+        //instruction[6..11] = instruction bits
+            //instruction[11] = zx
+            //instruction[10] = nx
+            //instruction[9] = zy
+            //instruction[8] = ny
+            //instruction[7] = f
+            //instruction[6] = no
+        //instruction[12] = a
+
+
+CHIP CPU {
+
+    IN  inM[16],         // M value input  (M = contents of RAM[A])
+        instruction[16], // Instruction for execution
+        reset;           // Signals whether to re-start the current
+                         // program (reset==1) or continue executing
+                         // the current program (reset==0).
+
+    OUT outM[16],        // M value output
+        writeM,          // Write to M? 
+        addressM[15],    // Address in data memory (of M)
+        pc[15];          // address of next instruction
+
+    PARTS:
+
+        Not(in=instruction[15], out=Ainstruction);
+        Not(in=Ainstruction, out=Cinstruction);   //checking what kind of instruction it is
+
+        //ARegister
+        Mux16(a=instruction, b=outALU, sel=instruction[15], out=outmux1);
+        Or(a=Ainstruction, b=instruction[5], out=loadA);
+        ARegister(in=outmux1, load=loadA, out=aregister);    //the sel for the ARegister is dest[0] which turns out to be Instruction[5]
+
+        //DRegister
+        And(a=instruction[4], b=Cinstruction, out=loadD);
+        DRegister(in=outALU, load=loadD, out=dregister);     //in case of a Cinstruction we want the DRegister to be loaded
+
+        //ALU
+        Mux16(a=aregister, b=inM, sel=instruction[12], out=outmux2);
+        ALU(x=dregister, y=outmux2,
+            zx=instruction[11],
+            nx=instruction[10],
+            zy=instruction[9],
+            ny=instruction[8],
+            f=instruction[7],
+            no=instruction[6],
+            out=outALU, out=outM, zr=zr, ng=ng);
+
+        //jump??
+        Not(in=zr, out=notzr);
+        Not(in=ng, out=notng);
+        And(a=notzr, b=notng, out=pos);
+        And(a=instruction[2], b=ng, out=jlt);
+        And(a=instruction[1], b=zr, out=jz);
+        And(a=instruction[0], b=pos, out=jpos);
+        Or(a=jlt, b=jz, out=jltz);
+        Or(a=jltz, b=jpos, out=jmpcondition);
+        And(a=Cinstruction, b=jmpcondition, out=jump);
+
+        //writeM
+        And(a=Cinstruction, b=instruction[3], out=writeM);  //if it is a c instruction then dest[2] goes to writeM which is exactly what happens here
+
+        //addressM
+        And16(a=aregister, b=true, out[0..14]=addressM);    //the first 15 bits of the a Register go to addressM
+
+        //PC
+        PC(in=aregister, load=jump, inc=true, reset=reset, out[0..14]=pc);
+}
