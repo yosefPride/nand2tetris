@@ -1,6 +1,5 @@
 import re
-import token
-
+# import token
 
 class JackTokenizer:
 
@@ -66,9 +65,6 @@ class JackTokenizer:
         return self.current_token
 
     def symbol(self):
-        # xml_markups = {'<': '&lt;', '>': '&gt;', '&': '&amp;'}
-        # if  self.current_token in xml_markups:
-        #     self.current_token = xml_markups.get(self.current_token)
         return self.current_token
 
     def identifier(self):
@@ -83,10 +79,3 @@ class JackTokenizer:
 
     def close(self):#closes input file
         self.file.close()
-
-# if __name__ == '__main__':
-# # ADD TEST TO SEE IF "Square" TRANSFORMS TO "square".
-#     tokenizer = JackTokenizer('Square/Square.jack')
-#     while tokenizer.has_more_tokens():
-#         tokenizer.advance()
-#         print(tokenizer.current_token)

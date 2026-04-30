@@ -78,7 +78,7 @@ class CompilationEngine:
             self.tokenizer.advance() # closing parenthesis
 
             # SUBROUTINE BODY
-            self.tokenizer.advance()  # opening curley bracket
+            self.tokenizer.advance()  # opening curly bracket
             while self.tokenizer.current_token == 'var':
                 self.compile_var_dec()
                 self.tokenizer.advance()
@@ -202,7 +202,7 @@ class CompilationEngine:
     def compile_let(self):
         # LET SYNTAX: 'let' varname ('[' expression ']')? '=' expression ';' # '?' meaning zero or one.
         # when I encounter a variable, I look it up in the subroutine level symbol table, if it isn't there, I look it up in the class level symbol table,
-        # and if I can't find it there either, then I know that it's undefined.
+        # and if I can't find it there either, then it must be undefined.
         # EXAMPLE FOR LET STATEMENT: let y = y + dy; VM CODE: push this 1, push local 1, add, pop this 1.
         self.tokenizer.advance()
         self.pop_value = self.tokenizer.identifier()  # variable to which I will pop
@@ -333,6 +333,6 @@ class CompilationEngine:
 
 
 if __name__ == "__main__":
-    code_generator = CompilationEngine("Square/Main.jack", "Square/Main.vm") # enter file/directory path.
+    code_generator = CompilationEngine("Average/Main.jack", "Average/Main.vm") # enter file/directory path.
     code_generator.compile_class()
     code_generator.close()
