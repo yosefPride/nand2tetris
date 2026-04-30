@@ -1,4 +1,6 @@
 import re
+import token
+
 
 class JackTokenizer:
 
@@ -81,3 +83,10 @@ class JackTokenizer:
 
     def close(self):#closes input file
         self.file.close()
+
+# if __name__ == '__main__':
+# # ADD TEST TO SEE IF "Square" TRANSFORMS TO "square".
+#     tokenizer = JackTokenizer('Square/Square.jack')
+#     while tokenizer.has_more_tokens():
+#         tokenizer.advance()
+#         print(tokenizer.current_token)

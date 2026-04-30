@@ -4,7 +4,8 @@
 // File name: projects/11/Square/Square.jack
 
 /** Implements a graphical square.
-    The square has top-left x and y coordinates, and a size. */
+ *The square has top-left x and y coordinates, and a size.
+ */
 class Square {
 
    field int x, y; // screen location of the top-left corner of this square

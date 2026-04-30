@@ -27,7 +27,7 @@ def jack_compiler(file_path):
             compilation_engine = CompilationEngine(str(file), str(output_file))  # CompilationEngine takes two strings as inputs
             print(f"Checking file: {file}")  # Debug line to see the files currently being checked
             compilation_engine.compile_class()
-            print('got here' + '\n')
+            # print('got here' + '\n')
             compilation_engine.close()
         print('finished compiling')
 

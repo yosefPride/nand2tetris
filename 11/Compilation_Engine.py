@@ -11,7 +11,7 @@ class CompilationEngine:
         self.iden_type = self.iden_kind = None
         self.symbol_table = SymbolTable()
         self.label_counter = 0
-        self.num_locals = 0 #this is supposed to help keep track of how many local variables a given subroutine has.
+        self.num_locals = self.num_args = 0 #this is supposed to help keep track of how many local variables a given subroutine has.
         self.special_ops = {'*':'Math.multiply', '/':'Math.divide'}
         self.op = None
         self.class_name = None
@@ -28,7 +28,7 @@ class CompilationEngine:
         # CLASS STRUCTURE: 'class' className '{' classVarDec(*zero or more) subroutineDec(*zero or more) '}'
         self.tokenizer.advance()  # 'class'
         self.tokenizer.advance()  # class name
-        self.class_name = self.tokenizer.current_token  # I need this because every method's symbol table starts with "this, class_name, arg, 0"
+        self.class_name = self.tokenizer.current_token  # if it causes problems move this under the next advance.
         self.tokenizer.advance()
         while self.tokenizer.has_more_tokens() and self.tokenizer.current_token != '}':
             if self.tokenizer.current_token in {'field', 'static'}:
@@ -168,7 +168,7 @@ class CompilationEngine:
             self.compile_do()
         elif self.tokenizer.current_token == 'return':
             self.compile_return()
-    #
+
     def compile_if(self):
         # IF SYNTAX: 'if' '(' expression ')' '{' statements '}'
         # VM syntax for 'if': compile expression, 'not', if-goto label, label, statements
@@ -300,7 +300,7 @@ class CompilationEngine:
         while self.tokenizer.current_token != ')':
             self.compile_expression()
             if self.tokenizer.current_token != ')':
-                self.tokenizer.advance() #this should be to advance past the commas ','. check that this is right.
+                self.tokenizer.advance() #this is to advance past the commas ','. check that this is right.
             self.num_args += 1
 
     def compile_term(self):
@@ -321,7 +321,7 @@ class CompilationEngine:
             elif self.tokenizer.current_token == 'true':
                 self.vm_writer.write_push('constant', 1)
                 self.vm_writer.write_arithmetic('neg')
-            else: self.vm_writer.write_push('this', 0)
+            else: self.vm_writer.write_push('pointer', 0)
             self.tokenizer.advance()
         elif self.tokenizer.token_type() == 'identifier':
             iden_name = self.tokenizer.identifier()
@@ -341,10 +341,20 @@ class CompilationEngine:
                 self.vm_writer.write_arithmetic('+') #add the index to the base address of the array.
                 self.vm_writer.write_pop('pointer', 1) # I pop the index into "that 0".
             elif self.tokenizer.current_token == '(':
+                # If the method call mentions no varName, we push the symbol table mapping of this.Next,
+                # we call compileExpressionList.This routine calls compileExpression n times, once
+                # for each expression in the parentheses.Finally, we generate the command call className.methodName
+                # informing that arguments were pushed onto the stack.
+                # The special case of calling an argument-less method is translated into call className.methodName 1.
+                # Note that className is the symbol table type of the varName identifier.
+                #!!!!!!!!!!!!!!!!!!!!NEED TO PUSH "this" HERE!!!!!!!!!!!!!!!!!!!
+                self.vm_writer.write_push('pointer', 0)
+                #!!!!!!!!!!!!!!!!!!!!IDK if this is correct....!!!!!!!!!!!!!!!!!!!!!!!
                 self.compile_expression_list()
-                self.vm_writer.write_call(iden_name, self.num_args)
+                self.vm_writer.write_call(self.class_name + '.' +  iden_name, self.num_args + 1) # + 1 because of "this"
                 self.tokenizer.advance()
-            else: self.vm_writer.write_push(self.symbol_table.kind_of(iden_name), self.symbol_table.index_of(iden_name))
+            else:
+                self.vm_writer.write_push(self.symbol_table.kind_of(iden_name), self.symbol_table.index_of(iden_name))
         elif self.tokenizer.token_type() == 'symbol':  # and not self.tokenizer.current_token in {'-', '~'}:
             if self.tokenizer.current_token == '(':
                 self.tokenizer.advance()
@@ -365,6 +375,6 @@ class CompilationEngine:
 
 
 if __name__ == "__main__":
-    code_generator = CompilationEngine("Square/Main.jack", "Square/Main.vm") # enter file/directory path.
+    code_generator = CompilationEngine("Square/Square.jack", "Square/Square.vm") # enter file/directory path.
     code_generator.compile_class()
     code_generator.close()
