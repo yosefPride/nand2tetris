@@ -15,6 +15,8 @@ class CompilationEngine:
         self.special_ops = {'*':'Math.multiply', '/':'Math.divide'}
         self.op = None
         self.class_name = None
+        self.objects = {}
+        self.pop_value = ''
         # string constants are created using String.new(length). string assignments are handled by a series of calls to String.appendChar(nextChar).
         # when I compute a value (an expression) I need to put the given value at the top of the vm stack.
         # I need to be working with a stack. so what is the last (and therefor first to access) node of the stack at any given moment?
@@ -245,7 +247,7 @@ class CompilationEngine:
         # EXAMPLE FOR LET STATEMENT: let y = y + dy; VM CODE: push this 1, push local 1, add, pop this 1.
         # self.vm_writer.output_file.write('\n' + 'starting compile_let()' + '\n')#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         self.tokenizer.advance()
-        pop_value = self.tokenizer.identifier()  # variable to which I will pop
+        self.pop_value = self.tokenizer.identifier()  # variable to which I will pop
         self.tokenizer.advance()  # if it's assigning a value to an index in an array then this is a '[', otherwise it's a '='.
         self.tokenizer.advance()
         self.compile_expression()  # expression
@@ -255,7 +257,7 @@ class CompilationEngine:
             self.tokenizer.advance()
             self.compile_expression()  # expression
             self.tokenizer.advance() # I advance here and in all other statements, because I need to advance in compile_if().
-        self.vm_writer.write_pop(self.symbol_table.kind_of(pop_value), self.symbol_table.index_of(pop_value)) # popping the final result into the let statement's variable.
+        self.vm_writer.write_pop(self.symbol_table.kind_of(self.pop_value), self.symbol_table.index_of(self.pop_value)) # popping the final result into the let statement's variable.
         # self.vm_writer.output_file.write('finished compile_let()' + '\n')#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     def compile_do(self):
@@ -331,7 +333,20 @@ class CompilationEngine:
                 subroutine_name = self.tokenizer.identifier()
                 self.tokenizer.advance() # opening parenthesis
                 self.compile_expression_list()
-                self.vm_writer.write_call(iden_name + '.' + subroutine_name, self.num_args) #HOW DO I GET N_ARGS FROM COMPILE_EXPRESSION_LIST?
+                if iden_name in self.objects:
+                    if iden_name == self.class_name:
+                        self.vm_writer.write_push(self.symbol_table.kind_of(iden_name), self.symbol_table.index_of(iden_name))
+                    else:
+                        self.vm_writer.write_push(self.symbol_table.kind_of(iden_name),
+                                                  self.symbol_table.index_of(iden_name))
+                    self.vm_writer.write_call(self.objects[iden_name] + '.' + subroutine_name, 1) #HOW DO I GET N_ARGS FROM COMPILE_EXPRESSION_LIST?
+
+                else:
+                    if subroutine_name == 'new':
+                        self.objects[str(self.pop_value)] = str(iden_name)
+                    self.vm_writer.write_call(iden_name + '.' + subroutine_name, self.num_args)
+
+
                 self.tokenizer.advance()
             elif self.tokenizer.current_token == '[': #push arr, push index, add, pop pointer 1 (that 0)
                 self.vm_writer.write_push(self.symbol_table.kind_of(iden_name), self.symbol_table.index_of(iden_name))
@@ -347,9 +362,7 @@ class CompilationEngine:
                 # informing that arguments were pushed onto the stack.
                 # The special case of calling an argument-less method is translated into call className.methodName 1.
                 # Note that className is the symbol table type of the varName identifier.
-                #!!!!!!!!!!!!!!!!!!!!NEED TO PUSH "this" HERE!!!!!!!!!!!!!!!!!!!
                 self.vm_writer.write_push('pointer', 0)
-                #!!!!!!!!!!!!!!!!!!!!IDK if this is correct....!!!!!!!!!!!!!!!!!!!!!!!
                 self.compile_expression_list()
                 self.vm_writer.write_call(self.class_name + '.' +  iden_name, self.num_args + 1) # + 1 because of "this"
                 self.tokenizer.advance()
@@ -375,6 +388,6 @@ class CompilationEngine:
 
 
 if __name__ == "__main__":
-    code_generator = CompilationEngine("Square/Square.jack", "Square/Square.vm") # enter file/directory path.
+    code_generator = CompilationEngine("Square/Main.jack", "Square/Main.vm") # enter file/directory path.
     code_generator.compile_class()
     code_generator.close()
