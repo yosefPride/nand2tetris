@@ -16,7 +16,7 @@ class TicTacToe{
         let board[7] = 56; //bottom middle
         let board[8] = 57; //bottom right
 
-        let occupied = Array.new(9); //construct Array of length 9 for chcking if a position on the board is occupied
+        let occupied = Array.new(9); //construct Array of length 9 for checking if a position on the board is occupied
         let occupied[0] = 0;
         let occupied[1] = 0;
         let occupied[2] = 0;
