@@ -1,5 +1,0 @@
-<class>
-x: int, field
-y: int, field
-size: int, field
-</class>

@@ -265,7 +265,7 @@ class CompilationEngine:
             self.tokenizer.advance()
         elif self.tokenizer.token_type() == 'string_const':
             self.vm_writer.write_call('String.new', 1)
-            string = self.tokenizer.current_token.list()
+            string = self.tokenizer.current_token.list() #!!!!!!!!!!!!!!!!!!!!!! STR HAS NO ATTRIBUTE 'list()'.!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             for letter in string:
                 self.vm_writer.write_push('constant', ord(letter))
                 self.vm_writer.write_call('String.appendChar', 2) #two, because I need to keep arg 0/this 0 in mind.

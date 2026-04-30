@@ -1,9 +1,0 @@
-push local 1
-pop this 2
-label NEGATIVE
-if-goto NEGATIVE
-call math.mult 2
-function func 2
-add
-goto NEGATIVE
-return
