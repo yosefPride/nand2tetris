@@ -263,13 +263,15 @@ class CompilationEngine:
         if self.tokenizer.token_type() == 'int_const':
             self.vm_writer.write_push('constant', self.tokenizer.int_val()) # 'push' 'constant' val
             self.tokenizer.advance()
+
         elif self.tokenizer.token_type() == 'string_const':
+            string = self.tokenizer.string_val()
+            self.vm_writer.write_push('constant', len(string))
             self.vm_writer.write_call('String.new', 1)
-            string = self.tokenizer.current_token.list() #!!!!!!!!!!!!!!!!!!!!!! STR HAS NO ATTRIBUTE 'list()'.!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            for letter in string:
-                self.vm_writer.write_push('constant', ord(letter))
+            for i in range(len(string)):
+                self.vm_writer.write_push('constant', ord(string[i]))
                 self.vm_writer.write_call('String.appendChar', 2) #two, because I need to keep arg 0/this 0 in mind.
-                self.tokenizer.advance()
+
         elif self.tokenizer.token_type() == 'keyword': #true, false, null, and this.
             if self.tokenizer.current_token in ('false', 'null'):
                 self.vm_writer.write_push('constant', 0)
@@ -278,6 +280,7 @@ class CompilationEngine:
                 self.vm_writer.write_arithmetic('neg')
             else: self.vm_writer.write_push('pointer', 0)
             self.tokenizer.advance()
+
         elif self.tokenizer.token_type() == 'identifier':
             iden_name = self.tokenizer.identifier()
             self.tokenizer.advance()
@@ -297,8 +300,8 @@ class CompilationEngine:
                     if subroutine_name == 'new':
                         self.objects[str(self.pop_value)] = str(iden_name)
                     self.vm_writer.write_call(iden_name + '.' + subroutine_name, self.num_args)
-
                 self.tokenizer.advance()
+
             elif self.tokenizer.current_token == '[': #push arr, push index, add, pop pointer 1 (that 0)
                 self.vm_writer.write_push(self.symbol_table.kind_of(iden_name), self.symbol_table.index_of(iden_name))
                 self.tokenizer.advance()
@@ -306,13 +309,15 @@ class CompilationEngine:
                 self.tokenizer.advance() # ']'
                 self.vm_writer.write_arithmetic('+') #add the index to the base address of the array.
                 self.vm_writer.write_pop('pointer', 1) # I pop the index into "that 0".
+
             elif self.tokenizer.current_token == '(':
                 self.vm_writer.write_push('pointer', 0)
                 self.compile_expression_list()
                 self.vm_writer.write_call(self.class_name + '.' +  iden_name, self.num_args + 1) # + 1 because of "this"
                 self.tokenizer.advance()
-            else:
-                self.vm_writer.write_push(self.symbol_table.kind_of(iden_name), self.symbol_table.index_of(iden_name))
+
+            else: self.vm_writer.write_push(self.symbol_table.kind_of(iden_name), self.symbol_table.index_of(iden_name))
+
         elif self.tokenizer.token_type() == 'symbol':  # and not self.tokenizer.current_token in {'-', '~'}:
             if self.tokenizer.current_token == '(':
                 self.tokenizer.advance()
