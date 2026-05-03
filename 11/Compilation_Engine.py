@@ -302,13 +302,15 @@ class CompilationEngine:
                     self.vm_writer.write_call(iden_name + '.' + subroutine_name, self.num_args)
                 self.tokenizer.advance()
 
-            elif self.tokenizer.current_token == '[': #push arr, push index, add, pop pointer 1 (that 0)
+            elif self.tokenizer.current_token == '[':
+                # let x = arr[i] == push arr, push index, add, pop pointer 1, push that 0, pop x
                 self.vm_writer.write_push(self.symbol_table.kind_of(iden_name), self.symbol_table.index_of(iden_name))
                 self.tokenizer.advance()
                 self.compile_expression()
                 self.tokenizer.advance() # ']'
                 self.vm_writer.write_arithmetic('+') #add the index to the base address of the array.
                 self.vm_writer.write_pop('pointer', 1) # I pop the index into "that 0".
+                self.vm_writer.write_push('that', 0)
 
             elif self.tokenizer.current_token == '(':
                 self.vm_writer.write_push('pointer', 0)
