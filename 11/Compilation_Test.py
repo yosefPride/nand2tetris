@@ -206,32 +206,19 @@ class CompilationEngine:
         # EXAMPLE FOR LET STATEMENT: let y = y + dy; VM CODE: push this 1, push local 1, add, pop this 1.
         self.tokenizer.advance()
         self.pop_value = self.tokenizer.identifier()  # variable to which I will pop
-        self.tokenizer.advance()  # if it's assigning a value to an index in an array then this is a '[', otherwise it's a '='.
-        if self.tokenizer.current_token == '[':
-            # let arr[i] = x == push arr, compileExpression, add, compileExpression, pop temp 0 ,pop pointer 1, push temp 0, pop that 0
-            self.vm_writer.write_push(self.symbol_table.kind_of(self.pop_value), self.symbol_table.index_of(self.pop_value))  # popping the final result into the let statement's variable.
-            self.tokenizer.advance()
-            self.compile_expression()
-            # self.vm_writer.output_file.write(f'{self.tokenizer.current_token}  !!!!!!!!!!!!!\n')
-            self.vm_writer.write_arithmetic("+")
-            self.tokenizer.advance()
-            self.tokenizer.advance()
-            self.compile_expression()  # expression
-            self.vm_writer.write_pop('temp', 0)
-            self.vm_writer.write_pop('pointer', 1)
-            self.vm_writer.write_push('temp', 0)
-            self.vm_writer.write_pop('that', 0)
-            self.tokenizer.advance()
-        else:
+        self.tokenizer.advance()
+        self.compile_expression()
+        #self.tokenizer.advance()  # if it's assigning a value to an index in an array then this is a '[', otherwise it's a '='.
+
+        #self.tokenizer.advance()
+        #self.compile_expression()  # expression
+        # if it's assigning a value to an index in an array then this is a ']', otherwise it's a ';'.
+        self.tokenizer.advance() #even if there isn't a continuation here I need to advance, because I need to advance in compile_if().
+        if self.tokenizer.current_token == '=': # I only get here when it's assigning a value to an array index. so this is a '=' sign.
             self.tokenizer.advance()
             self.compile_expression()  # expression
-            # if it's assigning a value to an index in an array then this is a ']', otherwise it's a ';'.
-            self.tokenizer.advance() #even if there isn't a continuation here I need to advance, because I need to advance in compile_if().
-            if self.tokenizer.current_token == '=': # I only get here when it's assigning a value to an array index. so this is a '=' sign.
-                self.tokenizer.advance()
-                self.compile_expression()  # expression
-                self.tokenizer.advance() # I advance here and in all other statements, because I need to advance in compile_if().
-            self.vm_writer.write_pop(self.symbol_table.kind_of(self.pop_value), self.symbol_table.index_of(self.pop_value)) # popping the final result into the let statement's variable.
+            self.tokenizer.advance() # I advance here and in all other statements, because I need to advance in compile_if().
+        self.vm_writer.write_pop(self.symbol_table.kind_of(self.pop_value), self.symbol_table.index_of(self.pop_value)) # popping the final result into the let statement's variable.
 
     def compile_do(self):
         # DO SYNTAX: 'do' subroutineCall ';'.
@@ -321,13 +308,26 @@ class CompilationEngine:
 
             elif self.tokenizer.current_token == '[':
                 # let x = arr[i] == push arr, push index, add, pop pointer 1, push that 0, pop x
-                self.vm_writer.write_push(self.symbol_table.kind_of(iden_name), self.symbol_table.index_of(iden_name))
+                # self.vm_writer.write_push(self.symbol_table.kind_of(iden_name), self.symbol_table.index_of(iden_name))
+                # self.tokenizer.advance()
+                # self.compile_expression()
+                # self.tokenizer.advance()  # ']'
+                # self.vm_writer.write_arithmetic('+')  # add the index to the base address of the array.
+                # self.vm_writer.write_pop('pointer', 1)  # I pop the index into "that 0".
+                # self.vm_writer.write_push('that', 0)
+                self.vm_writer.write_push(self.symbol_table.kind_of(self.pop_value), self.symbol_table.index_of(
+                    self.pop_value))  # popping the final result into the let statement's variable.
                 self.tokenizer.advance()
                 self.compile_expression()
-                self.tokenizer.advance()  # ']'
-                self.vm_writer.write_arithmetic('+')  # add the index to the base address of the array.
-                self.vm_writer.write_pop('pointer', 1)  # I pop the index into "that 0".
-                self.vm_writer.write_push('that', 0)
+                # self.vm_writer.output_file.write(f'{self.tokenizer.current_token}  !!!!!!!!!!!!!\n')
+                self.vm_writer.write_arithmetic("+")
+                self.tokenizer.advance()
+                self.compile_expression()  # expression
+                self.vm_writer.write_pop('temp', 0)
+                self.vm_writer.write_pop('pointer', 1)
+                self.vm_writer.write_push('temp', 0)
+                self.vm_writer.write_pop('that', 1)
+                self.tokenizer.advance()
 
             elif self.tokenizer.current_token == '(':
                 self.vm_writer.write_push('pointer', 0)

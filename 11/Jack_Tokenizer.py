@@ -18,7 +18,7 @@ class JackTokenizer:
     def has_more_tokens(self):
         pos = self.file.tell()# pos = current line of the file (tell() gets the position)
         line = self.file.readline()# reads the next line of the file and stores it in 'line'
-        if line:#check whole line so that it won't stop at an '\n' character
+        if line: # check whole line so that it won't stop at an '\n' character
             self.file.seek(pos)  # Resets file pointer to previous position (pos) so that when
             #has_more_tokens() is called the file pointer remains at its original position
             return True # if there's another token return true
