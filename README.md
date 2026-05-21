@@ -1,8 +1,8 @@
-#Nand2Tetris — Full Implementation (Projects 1–12)
+# Nand2Tetris — Full Implementation (Projects 1–12)
 
 Implementation of the complete Nand to Tetris curriculum, covering both hardware and software layers of a modern computer system.
 
-##Overview
+## Overview
 
 This repository implements a full computer system from the ground up:
 
@@ -18,13 +18,13 @@ The system is divided into two major parts:
 * Part I: Hardware (Projects 1–6)
 * Part II: Software (Projects 7–12)
 
-##Part I — Hardware (Projects 1–6)
+## Part I — Hardware (Projects 1–6)
 
-###Project 1: Boolean Logic
+### Project 1: Boolean Logic
 
 Implementation of basic logic gates (AND, OR, NOT, XOR, multiplexers) using NAND.
 
-###Project 2: Boolean Arithmetic
+### Project 2: Boolean Arithmetic
 
 Construction of arithmetic circuits including adders and the ALU.
 
