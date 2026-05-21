@@ -28,49 +28,49 @@ Implementation of basic logic gates (AND, OR, NOT, XOR, multiplexers) using NAND
 
 Construction of arithmetic circuits including adders and the ALU.
 
-Project 3: Memory
+### Project 3: Memory
 
 Design of registers, RAM units, and memory hierarchy.
 
-Project 4: Machine Language
+### Project 4: Machine Language
 
 Writing programs in Hack assembly and understanding instruction execution.
 
-Project 5: Computer Architecture
+### Project 5: Computer Architecture
 
 Building the CPU and integrating it with memory into a full computer system.
 
-Project 6: Assembler
+### Project 6: Assembler
 
 Implementation of an assembler translating Hack assembly into binary machine code.
 
-Part II — Software (Projects 7–12)
+## Part II — Software (Projects 7–12)
 
-Project 7: VM I — Stack Arithmetic
+### Project 7: VM I — Stack Arithmetic
 
 Implementation of a stack-based virtual machine (arithmetic and memory operations).
 
-Project 8: VM II — Program Control
+### Project 8: VM II — Program Control
 
 Extension of VM functionality with branching and function calls.
 
-Project 9: High-Level Language
+### Project 9: High-Level Language
 
 Execution of programs written in the Jack programming language.
 
-Project 10: Compiler I — Parsing
+### Project 10: Compiler I — Parsing
 
 Tokenizer and parser for the Jack language.
 
-Project 11: Compiler II — Code Generation
+### Project 11: Compiler II — Code Generation
 
 Compilation of Jack programs into VM code.
 
-Project 12: Operating System
+### Project 12: Operating System
 
 Implementation of core OS services including memory management, math, string handling, and I/O.
 
-Repository Structure
+## Repository Structure
 
 projects/
 ├── project01/
@@ -86,47 +86,34 @@ projects/
 ├── project11/
 └── project12/
 
-Key Concepts Learned
+## Key Concepts Learned
 
-Hardware Layer
+### Hardware Layer
 
-Digital logic design from NAND gates
+* Digital logic design from NAND gates
+* ALU and CPU construction
+* Memory architecture
+* Machine language execution
 
-ALU and CPU construction
+### Software Layer
 
-Memory architecture
+* Stack-based virtual machines
+* Compiler design (parsing and code generation)
+* Syntax analysis and AST construction
+* Operating system fundamentals
+* Multi-layer system abstraction
 
-Machine language execution
+## Educational Goals
 
-Software Layer
+* Understand how computers are built from first principles
+* Bridge hardware and software abstraction layers
+* Implement a full compiler pipeline
+* Build a working operating system
+* Gain systems-level engineering intuition
 
-Stack-based virtual machines
+## Status
 
-Compiler design (parsing and code generation)
-
-Syntax analysis and AST construction
-
-Operating system fundamentals
-
-Multi-layer system abstraction
-
-Educational Goals
-
-Understand how computers are built from first principles
-
-Bridge hardware and software abstraction layers
-
-Implement a full compiler pipeline
-
-Build a working operating system
-
-Gain systems-level engineering intuition
-
-Status
-
-Part I — Complete
-
-Part II — Complete
-
-Optional optimizations / extensions — Pending
+* Part I — Complete
+* Part II — Almost Complete
+* Optional optimizations / extensions — Pending
 
