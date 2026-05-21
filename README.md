@@ -72,6 +72,7 @@ Implementation of core OS services including memory management, math, string han
 
 ## Repository Structure
 
+```text
 projects/
 ├── project01/
 ├── project02/
@@ -85,6 +86,7 @@ projects/
 ├── project10/
 ├── project11/
 └── project12/
+```
 
 ## Key Concepts Learned
 
