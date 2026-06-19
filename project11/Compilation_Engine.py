@@ -6,12 +6,13 @@ class CompilationEngine:
 
     def __init__(self, input_file_path, output_file):
         self.input_file = open(input_file_path, 'r')
+        
         self.tokenizer = JackTokenizer(input_file_path)
         self.vm_writer = VMWriter(output_file)
-        self.iden_type = self.iden_kind = self.op = self.class_name = None
         self.symbol_table = SymbolTable()
-        self.label_counter = 0
-        self.num_locals = self.num_args = 0
+        
+        self.iden_type = self.iden_kind = self.op = self.class_name = None
+        self.label_counter = self.num_locals = self.num_args = 0
         self.special_ops = {'*':'Math.multiply', '/':'Math.divide'}
         self.objects = {}
         self.pop_value = ''
@@ -212,7 +213,6 @@ class CompilationEngine:
             self.vm_writer.write_push(self.symbol_table.kind_of(self.pop_value), self.symbol_table.index_of(self.pop_value))  # popping the final result into the let statement's variable.
             self.tokenizer.advance()
             self.compile_expression()
-            # self.vm_writer.output_file.write(f'{self.tokenizer.current_token}  !!!!!!!!!!!!!\n')
             self.vm_writer.write_arithmetic("+")
             self.tokenizer.advance()
             self.tokenizer.advance()
@@ -355,7 +355,7 @@ class CompilationEngine:
         self.input_file.close()
         self.vm_writer.close()
 
-if __name__ == "__main__":
-    code_generator = CompilationEngine("Average/Main.jack", "Average/Main.vm") # enter file/directory path.
-    code_generator.compile_class()
-    code_generator.close()
+# if __name__ == "__main__":
+#     code_generator = CompilationEngine("Average/Main.jack", "Average/Main.vm") # enter file/directory path.
+#     code_generator.compile_class()
+#     code_generator.close()
