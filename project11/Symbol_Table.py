@@ -79,3 +79,6 @@ class SymbolTable:
             key_list = list(self.statics.keys())
             return key_list.index(identifier_name)
         raise ValueError('must be an identifier name.')
+
+    # def usage(self):
+    #     print("implement")

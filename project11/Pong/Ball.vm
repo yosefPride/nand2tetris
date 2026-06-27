@@ -319,7 +319,7 @@ eq
 and
 push this 2
 push constant 0
-lt
+lt // or on line 328 should be here
 push argument 1
 push constant 1
 neg

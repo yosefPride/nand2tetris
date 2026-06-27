@@ -9,6 +9,8 @@ import os
 from Compilation_Engine import CompilationEngine
 from pathlib import Path # pathlib is an object-oriented replacement for os.path, used for filesystem paths.
 
+# CREATE A DIRECTORY "output" EVERY TIME THE COMPILER IS CALLED (if such a directory is non-existent)
+
 def jack_compiler(file_path):
     if os.path.isfile(file_path):# Check if the file_path is a file
         output_file = file_path.replace('.jack', '.vm')
@@ -18,10 +20,8 @@ def jack_compiler(file_path):
         compilation_engine.close()
         print('finished compiling')
 
-# WHENEVER A WE WANT TO RUN A PROGRAM ON THE VM EMULATOR, WE MUST LOAD THE JACK OS AS WELL AS THE .VM FILES
-
     elif os.path.isdir(file_path):# Check if the file_path is a directory
-        directory = Path(file_path) # The truth is that I don't need to use both pathlib's Path and os.path, I should use only one of them.
+        directory = Path(file_path) # Using both pathlib path and OS.path???
         for file in directory.glob("*.jack"): # Returns all files or directories matching a specified pattern
             output_file = file.with_suffix('.vm') # replaces all specified suffixes above (.jack) with (.vm)
             compilation_engine = CompilationEngine(str(file), str(output_file))  # CompilationEngine takes two strings as inputs

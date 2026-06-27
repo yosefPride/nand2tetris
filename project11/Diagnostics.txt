@@ -1,0 +1,7 @@
+# Ball.vm is fine except for this one bug:
+    step by step inspect the compilation of this line: ('or' ends up in the wrong place)
+    "if (((~(lengthx < 0)) & (bouncingDirection = 1)) | ((lengthx < 0) & (bouncingDirection = (-1)))) "
+
+# Main.vm is fine.
+
+# 

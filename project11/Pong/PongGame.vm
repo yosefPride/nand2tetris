@@ -23,7 +23,7 @@ pop this 1
 push constant 400
 push constant 0
 push this 1
-call Ball.setDestination 1
+call Ball.setDestination 3
 pop temp 0
 push constant 0
 push constant 238
@@ -124,7 +124,7 @@ not
 if-goto L_4
 push constant 1
 push this 0
-call Bat.setDirection 1
+call Bat.setDirection 2
 pop temp 0
 goto L_5
 label L_4
@@ -135,7 +135,7 @@ not
 if-goto L_6
 push constant 2
 push this 0
-call Bat.setDirection 1
+call Bat.setDirection 2
 pop temp 0
 goto L_7
 label L_6
@@ -285,7 +285,7 @@ sub
 pop this 6
 push this 6
 push this 0
-call Bat.setWidth 1
+call Bat.setWidth 2
 pop temp 0
 push this 4
 push constant 1
@@ -302,7 +302,7 @@ label L_18
 label L_16
 push local 0
 push this 1
-call Ball.bounce 1
+call Ball.bounce 2
 pop temp 0
 label L_14
 push constant 0

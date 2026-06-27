@@ -40,14 +40,18 @@ class CompilationEngine:
         self.iden_kind = self.tokenizer.current_token
         self.tokenizer.advance()
         self.iden_type = self.tokenizer.current_token
-        self.tokenizer.advance()
-        self.symbol_table.define(self.tokenizer.current_token, self.iden_type, self.iden_kind)
-        self.tokenizer.advance()
-        if self.tokenizer.current_token == ',':  # optional second variable separated by a comma ','.
-            while self.tokenizer.current_token != ';':
-                self.tokenizer.advance()
-                self.symbol_table.define(self.tokenizer.current_token, self.iden_type, self.iden_kind)
-                self.tokenizer.advance()
+        # self.tokenizer.advance()
+        # if self.iden_type not in self.tokenizer.keywords:
+        #     self.objects[str(self.tokenizer.current_token)] = str(self.iden_type)
+        # self.symbol_table.define(self.tokenizer.current_token, self.iden_type, self.iden_kind)
+        # self.tokenizer.advance()
+        # if self.tokenizer.current_token == ',':  # optional second variable separated by a comma ','.
+        while self.tokenizer.current_token != ';':
+            self.tokenizer.advance()
+            self.symbol_table.define(self.tokenizer.current_token, self.iden_type, self.iden_kind)
+            if self.iden_type not in self.tokenizer.keywords:
+                self.objects[str(self.tokenizer.current_token)] = str(self.iden_type)
+            self.tokenizer.advance()
 
     def compile_subroutine(self):
         self.symbol_table.start_subroutine() # creates new subroutine symbol table.
@@ -85,6 +89,7 @@ class CompilationEngine:
                 self.tokenizer.advance()
             self.vm_writer.write_function(self.class_name + '.' + name, self.num_locals)
             self.num_locals = 0
+            # why field vars?
             self.vm_writer.write_push('constant', self.symbol_table.var_count('field')) # setting the amount of space to allocate according to how many field variables there are.
             self.vm_writer.write_call('Memory.alloc', 1) # calls memory.alloc on the number pushed above.
             self.vm_writer.write_pop('pointer', 0) # anchors 'this' at the base address. so that when the constructor gets called, the caller can then use the base address of the object
@@ -112,6 +117,9 @@ class CompilationEngine:
             while self.tokenizer.current_token in {'if', 'while', 'let', 'do', 'return'}:
                 self.compile_statements()
 
+    def compile_subroutine_body(self):
+        print("implement")
+
     def compile_parameter_list(self): # adds all arguments to the arg symbol table.
         # PARAMETER LIST SYNTAX: type varName (',' type varName)*zero or more
         while self.tokenizer.current_token != ')':
@@ -129,6 +137,8 @@ class CompilationEngine:
         while self.tokenizer.current_token != ';':
             self.tokenizer.advance()
             self.symbol_table.define(self.tokenizer.current_token, self.iden_type, 'var')
+            if self.iden_type not in self.tokenizer.keywords:
+                self.objects[str(self.tokenizer.current_token)] = str(self.iden_type)
             self.tokenizer.advance()
             self.num_locals += 1
 
@@ -267,6 +277,7 @@ class CompilationEngine:
     def compile_expression_list(self):
         # EXPRESSION LIST SYNTAX: (expression (',' expression)*)? there can be an empty expression list, or a list with one or more expressions.
         self.tokenizer.advance()
+        # if I'm in a method call, num_args should start at 1. (because arg 0 is the object)
         self.num_args = 0
         while self.tokenizer.current_token != ')':
             self.compile_expression()
@@ -306,16 +317,13 @@ class CompilationEngine:
                 subroutine_name = self.tokenizer.identifier()
                 self.tokenizer.advance() # opening parenthesis
                 self.compile_expression_list()
-                if iden_name in self.objects:
-                    if iden_name == self.class_name:
-                        self.vm_writer.write_push(self.symbol_table.kind_of(iden_name), self.symbol_table.index_of(iden_name))
-                    else:
-                        self.vm_writer.write_push(self.symbol_table.kind_of(iden_name),
-                                                  self.symbol_table.index_of(iden_name))
-                    self.vm_writer.write_call(self.objects[iden_name] + '.' + subroutine_name, 1)
+                if iden_name in self.objects.keys():
+                    # if iden_name == self.class_name:
+                    self.vm_writer.write_push(self.symbol_table.kind_of(iden_name), self.symbol_table.index_of(iden_name))
+                    # else:
+                    #     self.vm_writer.write_push(self.symbol_table.kind_of(iden_name), self.symbol_table.index_of(iden_name))
+                    self.vm_writer.write_call(self.objects[iden_name] + '.' + subroutine_name, self.num_args+1) # +1 to include 'this'
                 else:
-                    if subroutine_name == 'new':
-                        self.objects[str(self.pop_value)] = str(iden_name)
                     self.vm_writer.write_call(iden_name + '.' + subroutine_name, self.num_args)
                 self.tokenizer.advance()
 
@@ -355,7 +363,8 @@ class CompilationEngine:
         self.input_file.close()
         self.vm_writer.close()
 
-# if __name__ == "__main__":
-#     code_generator = CompilationEngine("Average/Main.jack", "Average/Main.vm") # enter file/directory path.
-#     code_generator.compile_class()
-#     code_generator.close()
+if __name__ == "__main__":
+    code_generator = CompilationEngine("Pong/PongGame.jack", "Pong/PongGame.vm") # enter file/directory path.
+    code_generator.compile_class()
+    code_generator.close()
+
