@@ -319,13 +319,13 @@ eq
 and
 push this 2
 push constant 0
-lt // or on line 328 should be here
+lt
+or
 push argument 1
 push constant 1
 neg
 eq
 and
-or
 not
 if-goto L_26
 push constant 20

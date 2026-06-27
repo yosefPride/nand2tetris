@@ -2,6 +2,21 @@
     step by step inspect the compilation of this line: ('or' ends up in the wrong place)
     "if (((~(lengthx < 0)) & (bouncingDirection = 1)) | ((lengthx < 0) & (bouncingDirection = (-1)))) "
 
+    compile_if()
+        (
+        (
+        compile_expression()
+            compile_term()
+                (
+                compile_expression()
+                    compile_term()
+                        ~
+                            compile_term()
+                                lengthx
+
+
 # Main.vm is fine.
 
-# 
+# Bat.vm is fine.
+
+# PongGame.vm is fine.
