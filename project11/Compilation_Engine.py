@@ -15,7 +15,7 @@ class CompilationEngine:
         self.label_counter = self.num_locals = self.num_args = 0
         self.special_ops = {'*':'Math.multiply', '/':'Math.divide'}
         self.objects = {}
-        self.pop_value = ''
+        # self.is_method = False
 
     def get_unique_label(self, base_name):
         label = f"{base_name}_{self.label_counter}"
@@ -40,12 +40,6 @@ class CompilationEngine:
         self.iden_kind = self.tokenizer.current_token
         self.tokenizer.advance()
         self.iden_type = self.tokenizer.current_token
-        # self.tokenizer.advance()
-        # if self.iden_type not in self.tokenizer.keywords:
-        #     self.objects[str(self.tokenizer.current_token)] = str(self.iden_type)
-        # self.symbol_table.define(self.tokenizer.current_token, self.iden_type, self.iden_kind)
-        # self.tokenizer.advance()
-        # if self.tokenizer.current_token == ',':  # optional second variable separated by a comma ','.
         while self.tokenizer.current_token != ';':
             self.tokenizer.advance()
             self.symbol_table.define(self.tokenizer.current_token, self.iden_type, self.iden_kind)
@@ -58,6 +52,7 @@ class CompilationEngine:
         func_type = self.tokenizer.current_token
         if func_type == 'method': # every method must have this as its first argument.
             self.symbol_table.define('this', self.class_name, 'arg')
+            # self.is_method = True
         self.symbol_table.start_subroutine() # creates new subroutine symbol table.
         self.tokenizer.advance() # type
         self.tokenizer.advance() # name
@@ -68,6 +63,7 @@ class CompilationEngine:
 
         #SUBROUTINE BODY
         self.compile_subroutine_body(func_type, name)
+        # self.is_method = False
 
     def compile_subroutine_body(self, func_type, name):
         self.tokenizer.advance()  # opening curly bracket
@@ -185,11 +181,11 @@ class CompilationEngine:
         # and if I can't find it there either, then it must be undefined.
         # EXAMPLE FOR LET STATEMENT: let y = y + dy; VM CODE: push this 1, push local 1, add, pop this 1.
         self.tokenizer.advance()
-        self.pop_value = self.tokenizer.identifier()  # variable to which I will pop
+        pop_value = self.tokenizer.identifier()  # variable to which I will pop
         self.tokenizer.advance()  # if it's assigning a value to an index in an array then this is a '[', otherwise it's a '='.
         if self.tokenizer.current_token == '[':
             # let arr[i] = x == push arr, compileExpression, add, compileExpression, pop temp 0 ,pop pointer 1, push temp 0, pop that 0
-            self.vm_writer.write_push(self.symbol_table.kind_of(self.pop_value), self.symbol_table.index_of(self.pop_value))  # popping the final result into the let statement's variable.
+            self.vm_writer.write_push(self.symbol_table.kind_of(pop_value), self.symbol_table.index_of(pop_value))  # popping the final result into the let statement's variable.
             self.tokenizer.advance()
             self.compile_expression()
             self.vm_writer.write_arithmetic("+")
@@ -210,7 +206,7 @@ class CompilationEngine:
                 self.tokenizer.advance()
                 self.compile_expression()  # expression
                 self.tokenizer.advance() # I advance here and in all other statements, because I need to advance in compile_if().
-            self.vm_writer.write_pop(self.symbol_table.kind_of(self.pop_value), self.symbol_table.index_of(self.pop_value)) # popping the final result into the let statement's variable.
+            self.vm_writer.write_pop(self.symbol_table.kind_of(pop_value), self.symbol_table.index_of(pop_value)) # popping the final result into the let statement's variable.
 
     def compile_do(self):
         # DO SYNTAX: 'do' subroutineCall ';'.
@@ -247,6 +243,9 @@ class CompilationEngine:
         # EXPRESSION LIST SYNTAX: (expression (',' expression)*)? there can be an empty expression list, or a list with one or more expressions.
         self.tokenizer.advance()
         # if I'm in a method call, num_args should start at 1. (because arg 0 is the object)
+        # if self.is_method:
+        #     self.num_args = 1
+        # else: self.num_args = 0
         self.num_args = 0
         while self.tokenizer.current_token != ')':
             self.compile_expression()
