@@ -20,3 +20,7 @@
 # Bat.vm is fine.
 
 # PongGame.vm is fine.
+
+# TWO MAIN THINGS TO LOOK AT!
+1) "or" in wrong place with nested parenthesis.
+2) extra goto's.

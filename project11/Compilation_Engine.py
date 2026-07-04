@@ -54,71 +54,40 @@ class CompilationEngine:
             self.tokenizer.advance()
 
     def compile_subroutine(self):
-        self.symbol_table.start_subroutine() # creates new subroutine symbol table.
-        if self.tokenizer.current_token == 'function':
-            self.tokenizer.advance() # type
-            self.tokenizer.advance() # name
-            name = self.tokenizer.identifier() # name
-            self.tokenizer.advance()  # opening parenthesis
-            self.compile_parameter_list()
-            self.tokenizer.advance()  # closing parenthesis
-
-            #SUBROUTINE BODY
-            self.tokenizer.advance() # opening curly bracket
-            while self.tokenizer.current_token == 'var':
-                self.compile_var_dec()
-                self.tokenizer.advance()
-            self.vm_writer.write_function(self.class_name + '.' + name, self.num_locals)
-            self.num_locals = 0
-            while self.tokenizer.current_token in {'if', 'while', 'let', 'do', 'return'}:
-                self.compile_statements()
-
-        elif self.tokenizer.current_token == 'constructor':
-            # "constructor" type constructorName '(' parameterList ')' constructor body
-            self.tokenizer.advance() #type
-            self.tokenizer.advance() #name
-            name = self.tokenizer.identifier() # name
-            self.tokenizer.advance() # opening parenthesis
-            self.compile_parameter_list()
-            self.tokenizer.advance() # closing parenthesis
-
-            # SUBROUTINE BODY
-            self.tokenizer.advance()  # opening curly bracket
-            while self.tokenizer.current_token == 'var':
-                self.compile_var_dec()
-                self.tokenizer.advance()
-            self.vm_writer.write_function(self.class_name + '.' + name, self.num_locals)
-            self.num_locals = 0
-            # why field vars?
-            self.vm_writer.write_push('constant', self.symbol_table.var_count('field')) # setting the amount of space to allocate according to how many field variables there are.
-            self.vm_writer.write_call('Memory.alloc', 1) # calls memory.alloc on the number pushed above.
-            self.vm_writer.write_pop('pointer', 0) # anchors 'this' at the base address. so that when the constructor gets called, the caller can then use the base address of the object
-            while self.tokenizer.current_token in {'if', 'while', 'let', 'do', 'return'}:
-                self.compile_statements()
-
-        elif self.tokenizer.current_token == 'method':
-            self.tokenizer.advance()  # type
-            self.tokenizer.advance()  # name
-            name = self.tokenizer.identifier() # name
-            self.tokenizer.advance()  # opening parenthesis
+        # "constructor" type constructorName '(' parameterList ')' constructor body
+        func_type = self.tokenizer.current_token
+        if func_type == 'method': # every method must have this as its first argument.
             self.symbol_table.define('this', self.class_name, 'arg')
-            self.compile_parameter_list()
-            self.tokenizer.advance()  # closing parenthesis
+        self.symbol_table.start_subroutine() # creates new subroutine symbol table.
+        self.tokenizer.advance() # type
+        self.tokenizer.advance() # name
+        name = self.tokenizer.identifier() # name
+        self.tokenizer.advance()  # opening parenthesis
+        self.compile_parameter_list()
+        self.tokenizer.advance()  # closing parenthesis
 
-            # SUBROUTINE BODY
-            self.tokenizer.advance()  # opening curly bracket
-            while self.tokenizer.current_token == 'var':
-                self.compile_var_dec()
-                self.tokenizer.advance()
-            self.vm_writer.write_function(self.class_name + '.' + name, self.num_locals)
-            self.num_locals = 0
+        #SUBROUTINE BODY
+        self.compile_subroutine_body(func_type, name)
+
+    def compile_subroutine_body(self, func_type, name):
+        self.tokenizer.advance()  # opening curly bracket
+        while self.tokenizer.current_token == 'var':
+            self.compile_var_dec()
+            self.tokenizer.advance()
+        self.vm_writer.write_function(self.class_name + '.' + name, self.num_locals)
+        self.num_locals = 0
+        if func_type == "constructor":
+            # setting the amount of space to allocate according to how many field variables there are.
+            self.vm_writer.write_push('constant', self.symbol_table.var_count('field'))
+            self.vm_writer.write_call('Memory.alloc', 1)  # calls memory.alloc on the number pushed above.
+            # anchors 'this' at the base address. so that when the constructor gets called, the caller can then use the base address of the object
+            self.vm_writer.write_pop('pointer',0)
+        elif func_type == "method":
             self.vm_writer.write_push('argument', 0)
             self.vm_writer.write_pop('pointer', 0)
-            while self.tokenizer.current_token in {'if', 'while', 'let', 'do', 'return'}:
-                self.compile_statements()
-
-    def compile_subroutine_body(self):
-        print("implement")
+        # Happens for every function type.
+        while self.tokenizer.current_token in {'if', 'while', 'let', 'do', 'return'}:
+            self.compile_statements()
 
     def compile_parameter_list(self): # adds all arguments to the arg symbol table.
         # PARAMETER LIST SYNTAX: type varName (',' type varName)*zero or more
