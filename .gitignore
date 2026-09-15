@@ -1,10 +1,6 @@
-project06/__pycache__
-project07/__pycache__
-project08/__pycache__
-project10/__pycache__
-project10/.idea
-project11/__pycache__
-project11/.idea  
+__pycache__/
+.idea
+*.out
 project11/Diagnostics.txt
 project000
 project13
